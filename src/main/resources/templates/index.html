@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>吴宗宝 · 个人作品集</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='20' fill='%235b8cff'/><text x='50' y='70' font-size='54' text-anchor='middle' fill='white' font-family='monospace'>W</text></svg>">
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+
+<nav class="nav">
+    <div class="container nav-inner">
+        <a class="logo" href="/">WZB<span>.dev</span></a>
+        <div class="nav-links">
+            <a href="/#projects">作品</a>
+            <a href="/#about">关于</a>
+            <a class="nav-admin" href="/admin">管理</a>
+        </div>
+    </div>
+</nav>
+
+<header class="hero">
+    <div class="container">
+        <p class="hero-eyebrow">&lt;hello-world /&gt;&nbsp; 你好,我是</p>
+        <h1 class="hero-title">吴宗宝</h1>
+        <p class="hero-sub">Java 后端开发 · <span class="grad">Java / MySQL / Redis / Netty / WebSocket</span></p>
+        <p class="hero-desc">
+            武汉城市学院 软件工程 2027 届本科,正在寻找 Java / 游戏后端方向实习,可尽快到岗。
+            这里收录了我的项目作品、设计思路与简历之外的东西,欢迎围观。
+        </p>
+        <div class="hero-actions">
+            <a class="btn" href="#projects">查看作品</a>
+            <a class="btn ghost" href="mailto:21444178007@qq.com">联系我</a>
+        </div>
+    </div>
+</header>
+
+<section id="projects" class="section container">
+    <div class="section-head">
+        <h2>项目作品</h2>
+        <p>每个项目都写清了「做了什么、怎么做的、踩了什么坑」</p>
+    </div>
+
+    <p class="empty" th:if="${#lists.isEmpty(projects)}">
+        还没有发布的项目 —— 登录 <a href="/admin">/admin</a> 添加第一个作品吧。
+    </p>
+
+    <div class="grid">
+        <a class="card project-card" th:each="p : ${projects}" th:href="@{'/project/' + ${p.id}}">
+            <div class="card-cover">
+                <img th:if="${p.coverUrl}" th:src="${p.coverUrl}" th:alt="${p.title}" loading="lazy">
+                <div class="cover-fallback" th:unless="${p.coverUrl}"
+                     th:text="${#strings.substring(p.title, 0, 1)}">P</div>
+            </div>
+            <div class="card-body">
+                <h3 th:text="${p.title}">项目标题</h3>
+                <p class="card-summary" th:text="${p.summary}">一句话简介</p>
+                <div class="tags" th:if="${p.tags}">
+                    <span class="tag" th:each="t : ${#strings.arraySplit(p.tags, ',')}"
+                          th:text="${#strings.trim(t)}">Java</span>
+                </div>
+            </div>
+        </a>
+    </div>
+</section>
+
+<section id="about" class="section container">
+    <div class="section-head">
+        <h2>关于我</h2>
+        <p>简历之外,多聊几句</p>
+    </div>
+    <div class="about-grid">
+        <div class="about-card">
+            <h3>&gt; 技术方向</h3>
+            <ul>
+                <li>Java 后端:选课系统从 0 到 1 —— 需求梳理、数据库设计、接口开发、前后端联调全流程</li>
+                <li>正在深入:Redis 缓存与分布式锁、Netty / WebSocket 长连接,朝游戏服务器方向发展</li>
+                <li>工程习惯:Git、Maven、Postman、Linux 常用命令,统一接口格式与命名规范</li>
+            </ul>
+        </div>
+        <div class="about-card">
+            <h3>&gt; 简历上没写的</h3>
+            <ul>
+                <li>为什么想做游戏后端:既喜欢玩游戏,更好奇一个动作从客户端到服务端经历了什么</li>
+                <li>擅长借助 AI 编程工具(ChatGPT / Cursor)快速上手陌生技术栈、快速做出原型</li>
+                <li>有企业实习经历:车厂 3D 点云数据生产,养成了按规范作业、闭环返修的习惯</li>
+                <li>期望城市:武汉 / 深圳 / 广州 / 上海,实习期每周可到岗 5 天</li>
+            </ul>
+        </div>
+    </div>
+</section>
+
+<footer class="footer">
+    <div class="container footer-inner">
+        <div>© 2026 吴宗宝 · Built with Spring Boot</div>
+        <div class="footer-links">
+            <a href="mailto:21444178007@qq.com">21444178007@qq.com</a>
+        </div>
+    </div>
+</footer>
+
+</body>
+</html>

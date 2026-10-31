@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>编辑项目 · 后台</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='20' fill='%235b8cff'/><text x='50' y='70' font-size='54' text-anchor='middle' fill='white' font-family='monospace'>P</text></svg>">
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+
+<nav class="nav">
+    <div class="container nav-inner">
+        <a class="logo" href="/admin">后台<span>.admin</span></a>
+        <div class="nav-links">
+            <a href="/admin">← 返回列表</a>
+        </div>
+    </div>
+</nav>
+
+<section class="container section narrow">
+    <h2 class="page-title" th:text="${p.id != null} ? '编辑项目' : '新建项目'">新建项目</h2>
+
+    <div class="form-card">
+        <label class="field">标题 <em>*</em>
+            <input type="text" id="f-title" maxlength="100" th:value="${p.title}" placeholder="项目名称,如:多人在线小游戏服务器">
+        </label>
+
+        <label class="field">一句话简介
+            <input type="text" id="f-summary" maxlength="300" th:value="${p.summary}"
+                   placeholder="列表卡片上展示的一句话,突出亮点">
+        </label>
+
+        <label class="field">技术栈标签
+            <input type="text" id="f-tags" maxlength="200" th:value="${p.tags}"
+                   placeholder="英文逗号分隔,如: Java,Netty,Redis">
+        </label>
+
+        <div class="field">封面图
+            <input type="hidden" id="f-cover" th:value="${p.coverUrl}">
+            <div class="upload-row">
+                <input type="file" id="f-file" accept="image/*">
+                <img th:if="${p.coverUrl}" id="coverPreview" class="cover-preview" th:src="${p.coverUrl}" alt="封面预览">
+                <img th:unless="${p.coverUrl}" id="coverPreview" class="cover-preview" style="display:none" alt="封面预览">
+            </div>
+            <p class="field-tip">选图后自动上传,支持 jpg / png / gif / webp / svg,不超过 10MB</p>
+        </div>
+
+        <div class="field">在线体验包(网页 / 小游戏 zip)
+            <div class="upload-row" th:if="${p.id != null}">
+                <input type="file" id="f-demo-zip" accept=".zip">
+                <span class="asset-status" th:classappend="${hasDemo} ? ' ok'"
+                      th:text="${hasDemo} ? '已上传,访客可在详情页直接游玩' : '未上传'">未上传</span>
+                <button type="button" class="btn ghost small danger" id="delDemoBtn" th:if="${hasDemo}">删除</button>
+            </div>
+            <p class="field-tip" th:if="${p.id == null}">首次保存项目后,即可在这里上传体验包</p>
+            <p class="field-tip" th:if="${p.id != null}">zip 根目录需包含 index.html,上传后自动解压;解压后不超过 50MB / 500 个文件</p>
+        </div>
+
+        <div class="field">源码包(zip)
+            <div class="upload-row" th:if="${p.id != null}">
+                <input type="file" id="f-code-zip" accept=".zip">
+                <span class="asset-status" th:classappend="${hasCode} ? ' ok'"
+                      th:text="${hasCode} ? '已上传,详情页可在线浏览源码' : '未上传'">未上传</span>
+                <button type="button" class="btn ghost small danger" id="delCodeBtn" th:if="${hasCode}">删除</button>
+            </div>
+            <p class="field-tip" th:if="${p.id == null}">首次保存项目后,即可在这里上传源码包</p>
+            <p class="field-tip" th:if="${p.id != null}">Java / HTML / CSS / JS 等常见文本文件支持在线预览(带语法高亮)</p>
+        </div>
+
+        <label class="field">详细介绍
+            <textarea id="f-content" rows="14" th:text="${p.content}"
+                      placeholder="建议结构:&#10;1. 项目背景与你的职责&#10;2. 核心设计(架构、协议、并发处理…)&#10;3. 遇到的坑与解决过程&#10;4. 结果与数据"></textarea>
+        </label>
+
+        <div class="form-row">
+            <label class="field">在线演示 URL
+                <input type="text" id="f-demo" th:value="${p.demoUrl}" placeholder="https://… 可留空">
+            </label>
+            <label class="field">源码仓库 URL
+                <input type="text" id="f-repo" th:value="${p.repoUrl}" placeholder="https://github.com/…">
+            </label>
+        </div>
+
+        <div class="form-row">
+            <label class="field check">
+                <input type="checkbox" id="f-published" th:checked="${p.published}">
+                立即发布(取消勾选则保存为草稿)
+            </label>
+            <label class="field">排序权重
+                <input type="number" id="f-sort" class="small-input" th:value="${p.sortWeight}">
+            </label>
+        </div>
+
+        <div class="form-actions">
+            <button class="btn" id="saveBtn" th:attr="data-id=${p.id}">保 存</button>
+            <a class="btn ghost" href="/admin">取消</a>
+            <span class="save-msg" id="saveMsg"></span>
+        </div>
+    </div>
+</section>
+
+<script src="/js/admin.js"></script>
+</body>
+</html>

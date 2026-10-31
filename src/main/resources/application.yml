@@ -1,0 +1,25 @@
+server:
+  port: 8080
+
+spring:
+  datasource:
+    # 需要先在 MySQL 里执行: CREATE DATABASE portfolio DEFAULT CHARACTER SET utf8mb4;
+    url: jdbc:mysql://localhost:3306/portfolio?useUnicode=true&characterEncoding=utf8&serverTimezone=Asia/Shanghai&useSSL=false&allowPublicKeyRetrieval=true
+    username: root
+    password: "root"   # 本机 MySQL 密码
+  jpa:
+    hibernate:
+      ddl-auto: update   # 启动时自动建表,生产可改为 none + 手写 SQL
+    open-in-view: false
+  servlet:
+    multipart:
+      max-file-size: 60MB
+      max-request-size: 80MB
+
+app:
+  # 图片上传保存目录(相对 jar 启动目录),上线时可改为 /var/portfolio/uploads 等绝对路径
+  upload-dir: ./uploads
+  admin:
+    # 首次启动会自动创建管理员账号;之后改密码请直接改数据库 admin_user 表
+    username: admin
+    password: admin123

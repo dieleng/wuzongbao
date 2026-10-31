@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:text="${p.title} + ' · 个人作品集'">项目详情</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='20' fill='%235b8cff'/><text x='50' y='70' font-size='54' text-anchor='middle' fill='white' font-family='monospace'>W</text></svg>">
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+
+<nav class="nav">
+    <div class="container nav-inner">
+        <a class="logo" href="/">PORTFOLIO<span>.dev</span></a>
+        <div class="nav-links">
+            <a href="/#projects">← 返回列表</a>
+        </div>
+    </div>
+</nav>
+
+<article class="container detail">
+    <h1 th:text="${p.title}">项目标题</h1>
+
+    <p class="detail-summary" th:if="${p.summary}" th:text="${p.summary}">一句话简介</p>
+
+    <div class="detail-meta">
+        <span class="tag" th:each="t : ${#strings.arraySplit(p.tags, ',')}"
+              th:if="${p.tags}" th:text="${#strings.trim(t)}">Java</span>
+        <span class="meta-time" th:text="'发布于 ' + ${p.createdAtText}">发布于 2026-01-01</span>
+    </div>
+
+    <div class="detail-links" th:if="${p.demoUrl != null or p.repoUrl != null}">
+        <a class="btn" th:if="${p.demoUrl}" th:href="${p.demoUrl}" target="_blank" rel="noopener">在线演示 ↗</a>
+        <a class="btn ghost" th:if="${p.repoUrl}" th:href="${p.repoUrl}" target="_blank" rel="noopener">源码仓库 ↗</a>
+    </div>
+
+    <!-- 在线体验(后台上传的网页/游戏包,iframe 直接游玩) -->
+    <section class="demo-section" th:if="${hasDemo}">
+        <h2 class="block-title">在线体验</h2>
+        <div class="demo-frame-box">
+            <iframe id="demoFrame" th:src="@{'/demo/' + ${p.id} + '/index.html'}"
+                    allowfullscreen loading="lazy" title="项目在线体验"></iframe>
+        </div>
+        <div class="demo-frame-actions">
+            <a class="btn small ghost" th:href="@{'/demo/' + ${p.id} + '/index.html'}"
+               target="_blank" rel="noopener">新窗口全屏打开 ↗</a>
+            <button class="btn small ghost" type="button"
+                    onclick="document.getElementById('demoFrame').src = document.getElementById('demoFrame').src;">重新加载</button>
+        </div>
+    </section>
+
+    <div class="detail-cover" th:if="${p.coverUrl}">
+        <img th:src="${p.coverUrl}" th:alt="${p.title}">
+    </div>
+
+    <div class="detail-content" th:text="${p.content}">
+        详细介绍内容…
+    </div>
+
+    <!-- 源码浏览(后台上传的源码 zip,文件树 + 语法高亮) -->
+    <section class="code-section" id="codeViewer" th:if="${hasCode}" th:attr="data-id=${p.id}">
+        <h2 class="block-title">源码浏览</h2>
+        <div class="code-layout">
+            <aside class="code-tree" id="codeTree">加载中…</aside>
+            <div class="code-pane">
+                <div class="code-pane-head" id="codePath">点击左侧文件查看源码</div>
+                <pre class="code-pre"><code id="codeContent"></code></pre>
+            </div>
+        </div>
+    </section>
+</article>
+
+<th:block th:if="${hasCode}">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.9.0/build/styles/github-dark.min.css">
+    <script src="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.9.0/build/highlight.min.js" defer></script>
+</th:block>
+<script th:if="${hasCode}" src="/js/code-viewer.js" defer></script>
+
+<footer class="footer">
+    <div class="container footer-inner">
+        <div>© 2026 吴宗宝 · Built with Spring Boot</div>
+    </div>
+</footer>
+
+</body>
+</html>
